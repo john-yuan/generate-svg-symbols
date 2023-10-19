@@ -11,6 +11,8 @@ export function scanDir(
     keepVersion?: boolean
   } = {}
 ) {
+  const ids: string[] = []
+  const names: string[] = []
   const symbols: string[] = []
 
   fs.readdirSync(dir).forEach((name) => {
@@ -21,9 +23,15 @@ export function scanDir(
         const stat = fs.statSync(filepath)
         if (stat.isFile()) {
           const content = fs.readFileSync(filepath).toString()
+          const symbolName = name.replace(/\.svg$/i, '')
+          const symbolId = (options.idPrefix || '') + symbolName
+
+          ids.push(symbolId)
+          names.push(symbolName)
+
           symbols.push(
             convertSvgToSymbol(content, {
-              id: (options.idPrefix || '') + name.replace(/\.svg$/i, ''),
+              id: symbolId,
               className: options.className,
               keepXmlns: options.keepXmlns,
               keepVersion: options.keepVersion
@@ -36,5 +44,5 @@ export function scanDir(
     }
   })
 
-  return symbols
+  return { ids, names, symbols }
 }

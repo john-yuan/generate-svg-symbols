@@ -13,20 +13,26 @@ export interface GenerateOptions {
 }
 
 export function generate(options: GenerateOptions) {
-  const symbols = scanDir(options.dir, {
+  const { symbols, ids, names } = scanDir(options.dir, {
     idPrefix: options.idPrefix,
     className: options.className,
     keepXmlns: options.keepXmlns,
     keepVersion: options.keepVersion
   })
 
+  let code = ''
+
   if (options.format === 'ts' || options.format === 'js') {
-    return generateJavaScriptFile(symbols, options.indent)
+    code = generateJavaScriptFile(symbols, options.indent)
+  } else if (options.format === 'js-code') {
+    code = generateJavaScriptCode(symbols)
+  } else {
+    code = JSON.stringify(symbols, null, options.indent || 2)
   }
 
-  if (options.format === 'js-code') {
-    return generateJavaScriptCode(symbols)
+  return {
+    code,
+    ids,
+    names
   }
-
-  return JSON.stringify(symbols, null, options.indent || 2)
 }
