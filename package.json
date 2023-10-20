@@ -18,6 +18,9 @@
     "lint": "eslint --ext .js,.ts,.tsx ./src",
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx ./src"
   },
+  "dependencies": {
+    "resolve-cli-args": "^1.1.0"
+  },
   "devDependencies": {
     "@eslint/create-config": "^0.4.6",
     "@types/node": "^20.8.7",
@@ -28,10 +31,6 @@
     "prettier": "3.0.3",
     "typescript": "5.2.2"
   },
-  "license": "MIT",
-  "dependencies": {
-    "resolve-cli-args": "^1.1.0"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/john-yuan/generate-svg-symbols"
@@ -39,5 +38,6 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "license": "MIT"
 }

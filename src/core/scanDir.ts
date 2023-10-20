@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { convertSvgToSymbol } from './convertSvgToSymbol'
+import { optimize } from './optimize'
 
 export function scanDir(
   dir: string,
@@ -9,6 +10,8 @@ export function scanDir(
     className?: string
     keepXmlns?: boolean
     keepVersion?: boolean
+    skipSvgo?: boolean
+    onOptimized?: (filename: string) => void
   } = {}
 ) {
   const ids: string[] = []
@@ -22,7 +25,16 @@ export function scanDir(
       try {
         const stat = fs.statSync(filepath)
         if (stat.isFile()) {
-          const content = fs.readFileSync(filepath).toString()
+          let content = fs.readFileSync(filepath).toString()
+
+          if (!options.skipSvgo) {
+            const result = optimize(content)
+            if (result.optimized) {
+              content = result.svg
+              options.onOptimized?.(filepath)
+            }
+          }
+
           const symbolName = name.replace(/\.svg$/i, '')
           const symbolId = (options.idPrefix || '') + symbolName
 

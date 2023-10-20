@@ -11,6 +11,8 @@ export interface GenerateOptions {
   keepVersion?: boolean
   wrapper?: 'svg' | 'ts' | 'js' | 'js-bundle'
   attrs?: string
+  skipSvgo?: boolean
+  onOptimized?: (filename: string) => void
 }
 
 export function generate(options: GenerateOptions) {
@@ -18,24 +20,27 @@ export function generate(options: GenerateOptions) {
     idPrefix: options.idPrefix,
     className: options.className,
     keepXmlns: options.keepXmlns,
-    keepVersion: options.keepVersion
+    keepVersion: options.keepVersion,
+    skipSvgo: options.skipSvgo,
+    onOptimized: options.onOptimized
   })
 
-  let code = [
+  let svg = [
     options.attrs ? `<svg ${options.attrs}>` : `<svg>`,
     ...symbols,
     '</svg>'
   ].join('\n')
 
   if (options.wrapper === 'ts' || options.wrapper === 'js') {
-    code = generateJavaScriptFile(code, options.wrapper)
+    svg = generateJavaScriptFile(svg, options.wrapper)
   } else if (options.wrapper === 'js-bundle') {
-    code = generateJavaScriptCode(code)
+    svg = generateJavaScriptCode(svg)
   }
 
   return {
-    code,
+    svg,
     ids,
-    names
+    names,
+    symbols
   }
 }

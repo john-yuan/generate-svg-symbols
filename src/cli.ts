@@ -20,8 +20,10 @@ if (args['-h'] || args['--help'] || Object.keys(args).length === 0) {
       '  -w --wrapper  Specify output wrapper (svg, ts, js, js-bundle)',
       '  -p --prefix   Specify the prefix of the id',
       '  -c --class    Specify the class name',
-      '  -t --types    Generate types (can be boolean or string)',
+      '  -t --types    Generate TypesScript types (can be boolean or string)',
       '  -a --attrs    Specify extra attributes to the svg tag',
+      '  -h --help     Print this help message',
+      '  --skipSvgo    Skip optimizing svg with svgo',
       '  --keepXmlns   Keep xmlns attribute',
       '  --keepVersion Keep version attribute',
       ''
@@ -50,6 +52,7 @@ if (dir) {
     className: readArg('--class', '-c'),
     wrapper: readArg('--wrapper', '-w') as GenerateOptions['wrapper'],
     attrs: readArg('--attrs', '-a'),
+    skipSvgo: !!args['--skipSvgo'],
     keepXmlns: !!args['--keepXmlns'],
     keepVersion: !!args['--keepVersion']
   }
@@ -64,7 +67,11 @@ if (dir) {
     }
   }
 
-  const { code, ids, names } = generate(options)
+  options.onOptimized = (filename: string) => {
+    console.log(`Optimized: ${path.relative(cwd, filename)}`)
+  }
+
+  const { svg, ids, names } = generate(options)
 
   const writeFileSync = (filename: string, content: string) => {
     fs.mkdirSync(path.dirname(filename), { recursive: true, mode: 0o755 })
@@ -85,21 +92,21 @@ if (dir) {
 
       if (typeFile) {
         writeFileSync(path.resolve(cwd, typeFile), types.join('\n\n') + '\n')
-        writeFileSync(absOutput, code)
+        writeFileSync(absOutput, svg)
       } else if (options.wrapper === 'ts') {
-        writeFileSync(absOutput, [...types, code].join('\n\n'))
+        writeFileSync(absOutput, [...types, svg].join('\n\n'))
       } else {
-        writeFileSync(absOutput, code)
+        writeFileSync(absOutput, svg)
       }
     } else {
-      writeFileSync(absOutput, code)
+      writeFileSync(absOutput, svg)
     }
 
     const timeUsed = Date.now() - startedAt
 
     console.log(`Time used: ${timeUsed}ms`)
   } else {
-    console.log(code)
+    console.log(svg)
   }
 } else {
   console.error('error: the directory is not specified')
