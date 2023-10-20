@@ -9,7 +9,8 @@ export interface GenerateOptions {
   className?: string
   keepXmlns?: boolean
   keepVersion?: boolean
-  format?: 'json' | 'ts' | 'js' | 'js-code'
+  wrapper?: 'svg' | 'ts' | 'js' | 'js-bundle'
+  attrs?: string
 }
 
 export function generate(options: GenerateOptions) {
@@ -20,14 +21,16 @@ export function generate(options: GenerateOptions) {
     keepVersion: options.keepVersion
   })
 
-  let code = ''
+  let code = [
+    options.attrs ? `<svg ${options.attrs}>` : `<svg>`,
+    ...symbols,
+    '</svg>'
+  ].join('\n')
 
-  if (options.format === 'ts' || options.format === 'js') {
-    code = generateJavaScriptFile(symbols, options.indent)
-  } else if (options.format === 'js-code') {
-    code = generateJavaScriptCode(symbols)
-  } else {
-    code = JSON.stringify(symbols, null, options.indent || 2)
+  if (options.wrapper === 'ts' || options.wrapper === 'js') {
+    code = generateJavaScriptFile(code, options.wrapper)
+  } else if (options.wrapper === 'js-bundle') {
+    code = generateJavaScriptCode(code)
   }
 
   return {

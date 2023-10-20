@@ -26,9 +26,6 @@ const TEMPLATE =
 })()
 `.trim() + '\n'
 
-export function generateJavaScriptCode(symbols: string[]) {
-  return TEMPLATE.replace(
-    '__SVG__',
-    JSON.stringify(['<svg>', ...symbols, '</svg>'].join(''))
-  )
+export function generateJavaScriptCode(svg: string) {
+  return TEMPLATE.replace('__SVG__', JSON.stringify(svg))
 }

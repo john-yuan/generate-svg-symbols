@@ -1,3 +1,11 @@
-export function generateJavaScriptFile(symbols: string[], indent?: number) {
-  return 'export default ' + JSON.stringify(symbols, null, indent || 2) + '\n'
+export function generateJavaScriptFile(svg: string, type: 'ts' | 'js') {
+  let code: string
+
+  if (type === 'js' || svg.includes('`')) {
+    code = JSON.stringify(svg)
+  } else {
+    code = '`' + svg + '`'
+  }
+
+  return 'export default ' + code + '\n'
 }

@@ -17,10 +17,11 @@ if (args['-h'] || args['--help'] || Object.keys(args).length === 0) {
       'Options:',
       '  -d --dir      Specify the directory',
       '  -o --output   Specify output filename',
-      '  -f --format   Specify output format (json, ts, js, js-code)',
+      '  -w --wrapper  Specify output wrapper (svg, ts, js, js-bundle)',
       '  -p --prefix   Specify the prefix of the id',
       '  -c --class    Specify the class name',
       '  -t --types    Generate types (can be boolean or string)',
+      '  -a --attrs    Specify extra attributes to the svg tag',
       '  --keepXmlns   Keep xmlns attribute',
       '  --keepVersion Keep version attribute',
       ''
@@ -47,9 +48,20 @@ if (dir) {
     dir: path.resolve(cwd, dir),
     idPrefix: readArg('--prefix', '-p'),
     className: readArg('--class', '-c'),
-    format: readArg('--format', '-f') as GenerateOptions['format'],
+    wrapper: readArg('--wrapper', '-w') as GenerateOptions['wrapper'],
+    attrs: readArg('--attrs', '-a'),
     keepXmlns: !!args['--keepXmlns'],
     keepVersion: !!args['--keepVersion']
+  }
+
+  if (!options.wrapper && output) {
+    if (/\.tsx?$/i.test(output)) {
+      options.wrapper = 'ts'
+    } else if (/\bbundle\.js$/i.test(output)) {
+      options.wrapper = 'js-bundle'
+    } else if (/\.jsx?$/i.test(output)) {
+      options.wrapper = 'js'
+    }
   }
 
   const { code, ids, names } = generate(options)
@@ -74,7 +86,7 @@ if (dir) {
       if (typeFile) {
         writeFileSync(path.resolve(cwd, typeFile), types.join('\n\n') + '\n')
         writeFileSync(absOutput, code)
-      } else if (options.format === 'ts') {
+      } else if (options.wrapper === 'ts') {
         writeFileSync(absOutput, [...types, code].join('\n\n'))
       } else {
         writeFileSync(absOutput, code)
