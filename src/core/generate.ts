@@ -12,7 +12,6 @@ export interface GenerateOptions {
   wrapper?: 'svg' | 'ts' | 'js' | 'js-bundle'
   attrs?: string
   skipSvgo?: boolean
-  skipComments?: boolean
   onOptimized?: (filename: string) => void
 }
 
@@ -33,7 +32,7 @@ export function generate(options: GenerateOptions) {
   ].join('\n')
 
   if (options.wrapper === 'ts' || options.wrapper === 'js') {
-    svg = generateJavaScriptFile(svg, options.wrapper, options.skipComments)
+    svg = generateJavaScriptFile(svg, options.wrapper)
   } else if (options.wrapper === 'js-bundle') {
     svg = generateJavaScriptBundle(svg)
   }

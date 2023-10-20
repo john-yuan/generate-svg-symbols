@@ -4,6 +4,7 @@ import { resolveCliArgs } from 'resolve-cli-args'
 import { generate } from './core/generate'
 import type { GenerateOptions } from './core/generate'
 import { generateUnions } from './core/generateUnions'
+import { generateComments } from './core/generateComments'
 
 const { args } = resolveCliArgs(process.argv.slice(2))
 
@@ -47,6 +48,7 @@ if (dir) {
   const startedAt = Date.now()
   const cwd = process.cwd()
   const output = readArg('--output', '-o')
+  const skipComments = !!args['--skipComments']
   const options: GenerateOptions = {
     dir: path.resolve(cwd, dir),
     idPrefix: readArg('--prefix', '-p'),
@@ -54,7 +56,6 @@ if (dir) {
     wrapper: readArg('--wrapper', '-w') as GenerateOptions['wrapper'],
     attrs: readArg('--attrs', '-a'),
     skipSvgo: !!args['--skipSvgo'],
-    skipComments: !!args['--skipComments'],
     keepXmlns: !!args['--keepXmlns'],
     keepVersion: !!args['--keepVersion']
   }
@@ -84,6 +85,10 @@ if (dir) {
 
   if (output) {
     const absOutput = path.resolve(cwd, output)
+    const comments =
+      !skipComments && (options.wrapper === 'ts' || options.wrapper === 'js')
+        ? generateComments()
+        : ''
 
     if (args['--types'] || args['-t']) {
       const typeFile = mergeArg('--types', '-t')[0]
@@ -93,15 +98,18 @@ if (dir) {
       ]
 
       if (typeFile) {
-        writeFileSync(path.resolve(cwd, typeFile), types.join('\n\n') + '\n')
-        writeFileSync(absOutput, svg)
+        writeFileSync(
+          path.resolve(cwd, typeFile),
+          comments + types.join('\n\n') + '\n'
+        )
+        writeFileSync(absOutput, comments + svg)
       } else if (options.wrapper === 'ts') {
-        writeFileSync(absOutput, [...types, svg].join('\n\n'))
+        writeFileSync(absOutput, comments + [...types, svg].join('\n\n'))
       } else {
-        writeFileSync(absOutput, svg)
+        writeFileSync(absOutput, comments + svg)
       }
     } else {
-      writeFileSync(absOutput, svg)
+      writeFileSync(absOutput, comments + svg)
     }
 
     const timeUsed = Date.now() - startedAt

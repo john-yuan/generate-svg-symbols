@@ -1,20 +1,5 @@
-export function generateJavaScriptFile(
-  svg: string,
-  type: 'ts' | 'js',
-  skipComments?: boolean
-) {
+export function generateJavaScriptFile(svg: string, type: 'ts' | 'js') {
   let code: string
-  let comments = ''
-
-  if (!skipComments) {
-    comments = [
-      '/* This file was automatically generated and should not be edited. */',
-      '/* eslint-disable */',
-      '/* tslint:disable */',
-      '',
-      ''
-    ].join('\n')
-  }
 
   if (type === 'js' || svg.includes('`')) {
     code = JSON.stringify(svg)
@@ -22,5 +7,5 @@ export function generateJavaScriptFile(
     code = '`' + svg + '`'
   }
 
-  return comments + 'export default ' + code + '\n'
+  return 'export default ' + code + '\n'
 }
