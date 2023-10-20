@@ -1,4 +1,4 @@
-import { generateJavaScriptCode } from './generateJavaScriptCode'
+import { generateJavaScriptBundle } from './generateJavaScriptBundle'
 import { generateJavaScriptFile } from './generateJavaScriptFile'
 import { scanDir } from './scanDir'
 
@@ -12,6 +12,7 @@ export interface GenerateOptions {
   wrapper?: 'svg' | 'ts' | 'js' | 'js-bundle'
   attrs?: string
   skipSvgo?: boolean
+  skipComments?: boolean
   onOptimized?: (filename: string) => void
 }
 
@@ -32,9 +33,9 @@ export function generate(options: GenerateOptions) {
   ].join('\n')
 
   if (options.wrapper === 'ts' || options.wrapper === 'js') {
-    svg = generateJavaScriptFile(svg, options.wrapper)
+    svg = generateJavaScriptFile(svg, options.wrapper, options.skipComments)
   } else if (options.wrapper === 'js-bundle') {
-    svg = generateJavaScriptCode(svg)
+    svg = generateJavaScriptBundle(svg)
   }
 
   return {

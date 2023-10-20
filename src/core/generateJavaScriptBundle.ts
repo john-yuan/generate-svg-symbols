@@ -26,6 +26,6 @@ const TEMPLATE =
 })()
 `.trim() + '\n'
 
-export function generateJavaScriptCode(svg: string) {
+export function generateJavaScriptBundle(svg: string) {
   return TEMPLATE.replace('__SVG__', JSON.stringify(svg))
 }

@@ -15,17 +15,18 @@ if (args['-h'] || args['--help'] || Object.keys(args).length === 0) {
       '  generate-svg-symbols -d ./path/to/svg/dir',
       '',
       'Options:',
-      '  -d --dir      Specify the directory',
-      '  -o --output   Specify output filename',
-      '  -w --wrapper  Specify output wrapper (svg, ts, js, js-bundle)',
-      '  -p --prefix   Specify the prefix of the id',
-      '  -c --class    Specify the class name',
-      '  -t --types    Generate TypesScript types (can be boolean or string)',
-      '  -a --attrs    Specify extra attributes to the svg tag',
-      '  -h --help     Print this help message',
-      '  --skipSvgo    Skip optimizing svg with svgo',
-      '  --keepXmlns   Keep xmlns attribute',
-      '  --keepVersion Keep version attribute',
+      '  -d --dir        Specify the directory',
+      '  -o --output     Specify output filename',
+      '  -w --wrapper    Specify output wrapper (svg, ts, js, js-bundle)',
+      '  -p --prefix     Specify the prefix of the id',
+      '  -c --class      Specify the class name',
+      '  -t --types      Generate TypesScript types (can be boolean or string)',
+      '  -a --attrs      Specify extra attributes to the svg tag',
+      '  -h --help       Print this help message',
+      '  --skipSvgo      Skip optimizing svg with svgo',
+      '  --skipComments  Skip generating comments for ts or js',
+      '  --keepXmlns     Keep xmlns attribute',
+      '  --keepVersion   Keep version attribute',
       ''
     ].join('\n')
   )
@@ -53,6 +54,7 @@ if (dir) {
     wrapper: readArg('--wrapper', '-w') as GenerateOptions['wrapper'],
     attrs: readArg('--attrs', '-a'),
     skipSvgo: !!args['--skipSvgo'],
+    skipComments: !!args['--skipComments'],
     keepXmlns: !!args['--keepXmlns'],
     keepVersion: !!args['--keepVersion']
   }
