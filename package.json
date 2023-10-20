@@ -1,6 +1,6 @@
 {
   "name": "generate-svg-symbols",
-  "version": "0.0.1-alpha.3",
+  "version": "1.0.0",
   "description": "A command line tool to convert SVG files to symbols.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
