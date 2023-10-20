@@ -1,5 +1,7 @@
 # README
 
+[![npm version](https://img.shields.io/npm/v/generate-svg-symbols.svg)](https://www.npmjs.com/package/generate-svg-symbols)
+
 A command line tool to convert SVG files to symbols.
 
 ```bash

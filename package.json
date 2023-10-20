@@ -39,6 +39,9 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "keywords": ["svg", "symbol"],
+  "keywords": [
+    "svg",
+    "symbol"
+  ],
   "license": "MIT"
 }
