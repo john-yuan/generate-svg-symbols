@@ -51,3 +51,7 @@ console.log(names)
 console.log(symbols)
 console.log(svg)
 ```
+
+## License
+
+[MIT](./LICENSE)
