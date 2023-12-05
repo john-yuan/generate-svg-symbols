@@ -28,10 +28,22 @@ export function convertSvgToSymbol(
             const matched = first.match(reg)
             if (matched) {
               attrs.push(matched[0])
+              return true
             }
+            return false
           }
 
-          addMatched(/viewBox=('|")([^'"]+)\1/i)
+          if (!addMatched(/viewBox=('|")([^'"]+)\1/i)) {
+            const width = first.match(/width=('|")([^'"]+)\1/i)?.[2]
+            const height = first.match(/height=('|")([^'"]+)\1/i)?.[2]
+
+            if (width != null && height != null) {
+              const w = width.replace(/px$/i, '')
+              const h = width.replace(/px$/i, '')
+              const viewBox = 'viewBox="0 0 ' + w + ' ' + h + '"'
+              attrs.push(viewBox)
+            }
+          }
 
           if (options.keepXmlns) {
             addMatched(/xmlns=('|")([^'"]+)\1/i)

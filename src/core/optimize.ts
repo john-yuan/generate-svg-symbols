@@ -8,7 +8,22 @@ function getSvgOptimize(): ((...args: any[]) => { data: string }) | false {
   try {
     const svgo = require('svgo')
     if (svgo && svgo.optimize) {
-      svgoOptimize = svgo.optimize
+      svgoOptimize = (svg) => {
+        return svgo.optimize(svg, {
+          plugins: [
+            {
+              name: 'preset-default',
+              params: {
+                overrides: {
+                  // viewBox is required to resize SVGs with CSS.
+                  // @see https://github.com/svg/svgo/issues/1128
+                  removeViewBox: false
+                }
+              }
+            }
+          ]
+        })
+      }
     }
   } catch (err) {
     // svgo not installed
