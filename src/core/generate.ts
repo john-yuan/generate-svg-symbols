@@ -10,6 +10,7 @@ export interface GenerateOptions {
   keepXmlns?: boolean
   keepVersion?: boolean
   wrapper?: 'svg' | 'ts' | 'js' | 'js-bundle'
+  varname?: string
   attrs?: string
   skipSvgo?: boolean
   onOptimized?: (filename: string) => void
@@ -32,7 +33,7 @@ export function generate(options: GenerateOptions) {
   ].join('\n')
 
   if (options.wrapper === 'ts' || options.wrapper === 'js') {
-    svg = generateJavaScriptFile(svg, options.wrapper)
+    svg = generateJavaScriptFile(svg, options.wrapper, options.varname)
   } else if (options.wrapper === 'js-bundle') {
     svg = generateJavaScriptBundle(svg)
   }

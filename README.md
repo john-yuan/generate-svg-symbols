@@ -32,6 +32,7 @@ Options:
   -p --prefix     Specify the prefix of the id
   -c --class      Specify the class name
   -t --types      Generate TypesScript types (can be boolean or string)
+  -n --varname    Specify the export const variable name for ts or js
   -a --attrs      Specify extra attributes to the svg tag
   -h --help       Print this help message
   --skipSvgo      Skip optimizing svg with svgo
