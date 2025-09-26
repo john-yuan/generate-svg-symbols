@@ -1,6 +1,10 @@
 let svgoOptimize: ((...args: any[]) => { data: string }) | false | null = null
 
-function getSvgOptimize(): ((...args: any[]) => { data: string }) | false {
+let prefixCounter = 0
+
+function getSvgOptimize(
+  prefix: string
+): ((...args: any[]) => { data: string }) | false {
   if (svgoOptimize !== null) {
     return svgoOptimize
   }
@@ -9,6 +13,7 @@ function getSvgOptimize(): ((...args: any[]) => { data: string }) | false {
     const svgo = require('svgo')
     if (svgo && svgo.optimize) {
       svgoOptimize = (svg) => {
+        prefixCounter += 1
         return svgo.optimize(svg, {
           plugins: [
             {
@@ -19,6 +24,13 @@ function getSvgOptimize(): ((...args: any[]) => { data: string }) | false {
                   // @see https://github.com/svg/svgo/issues/1128
                   removeViewBox: false
                 }
+              }
+            },
+            {
+              name: 'prefixIds',
+              params: {
+                delim: '_',
+                prefix: () => '_' + prefix + prefixCounter.toString(16)
               }
             }
           ]
@@ -34,8 +46,8 @@ function getSvgOptimize(): ((...args: any[]) => { data: string }) | false {
   return svgoOptimize
 }
 
-export function optimize(svg: string) {
-  const opt = getSvgOptimize()
+export function optimize(svg: string, prefix: string) {
+  const opt = getSvgOptimize(prefix)
 
   if (opt) {
     try {

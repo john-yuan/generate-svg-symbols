@@ -15,7 +15,7 @@ This command will convert every SVG file found in the source directory to SVG sy
 - `js` Output a JavaScript file that export the SVG content as its default export.
 - `js-bundle` Output a JavaScript file that will inject the SVG content to `document.body` automatically.
 
-If you want to optimize the SVG content (remove redundant and useless information in the SVG content), you can install [svgo][svgo] to your project. If [svgo][svgo] is detected, the SVG content will be optimized with [svgo][svgo] before it get converted to SVG symbol automatically (to avoid this, you can use the `--skipSvgo` option).
+If you want to optimize the SVG content (remove redundant and useless information in the SVG content), you can install [svgo][svgo] (version ^3.0.5) to your project. If [svgo][svgo] is detected, the SVG content will be optimized with [svgo][svgo] before it get converted to SVG symbol automatically (to avoid this, you can use the `--skipSvgo` option).
 
 [svgo]: https://www.npmjs.com/package/svgo
 

@@ -28,7 +28,7 @@ export function scanDir(
           let content = fs.readFileSync(filepath).toString()
 
           if (!options.skipSvgo) {
-            const result = optimize(content)
+            const result = optimize(content, options.idPrefix || '__symbol')
             if (result.optimized) {
               content = result.svg
               options.onOptimized?.(filepath)
