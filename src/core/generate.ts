@@ -17,20 +17,27 @@ export interface GenerateOptions {
 }
 
 export function generate(options: GenerateOptions) {
-  const { symbols, ids, names } = scanDir(options.dir, {
-    idPrefix: options.idPrefix,
-    className: options.className,
-    keepXmlns: options.keepXmlns,
-    keepVersion: options.keepVersion,
-    skipSvgo: options.skipSvgo,
-    onOptimized: options.onOptimized
-  })
+  const { symbols, ids, names } = scanDir(
+    options.dir,
+    {
+      idPrefix: options.idPrefix,
+      className: options.className,
+      keepXmlns: options.keepXmlns,
+      keepVersion: options.keepVersion,
+      skipSvgo: options.skipSvgo,
+      onOptimized: options.onOptimized
+    },
+    (err) => {
+      console.log(`${err}`)
+      console.log('')
+    }
+  )
 
   let svg = [
     options.attrs ? `<svg ${options.attrs}>` : `<svg>`,
     ...symbols,
     '</svg>'
-  ].join('\n')
+  ].join(symbols.length ? '\n' : '')
 
   if (options.wrapper === 'ts' || options.wrapper === 'js') {
     svg = generateJavaScriptFile(svg, options.wrapper, options.varname)
